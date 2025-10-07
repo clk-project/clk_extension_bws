@@ -1,0 +1,22 @@
+[build-system]
+requires = ["flit_core >=3.11,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.module]
+name = "bws"
+path = "."
+
+[project]
+name = "clk_extension_bws"
+authors = [{name = "Konubinix", email = "konubinixweb@gmail.com"}]
+license = "MIT"
+license-files = ["LICENSE"]
+dynamic = ["version", "description"]
+dependencies = ["clk"]
+
+
+[project.urls]
+Home = "https://github.com/clk-project/clk_extension_bws"
+
+[project.entry-points."keyring.backends"]
+bws = "bws:BWSKeyring"
