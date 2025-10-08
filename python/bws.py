@@ -20,6 +20,7 @@ from clk.decorators import (
 from clk.lib import call, check_output, json_dumps, updated_env
 from clk.log import get_logger
 from clk.types import DynamicChoice, ExecutableType
+from keyring.compat import properties
 
 LOGGER = get_logger(__name__)
 
@@ -27,7 +28,13 @@ import keyring.backend
 
 
 class BWSKeyring(keyring.backend.KeyringBackend):
-    priority = 6
+    @properties.classproperty
+    def priority(cls) -> float:
+        try:
+            check_output(["bws", "--version"], internal=True)
+            return 6.0
+        except FileNotFoundError:
+            return 0.0
 
     def set_password(self, _, username, password):
         raise NotImplementedError
@@ -36,11 +43,14 @@ class BWSKeyring(keyring.backend.KeyringBackend):
         def name(secret):
             return secret["key"]
 
-        candidates = [
-            _secret["value"]
-            for _secret in BWSSecretName().bws_secret_list()
-            if name(_secret) == secret
-        ]
+        try:
+            candidates = [
+                _secret["value"]
+                for _secret in BWSSecretName().bws_secret_list()
+                if name(_secret) == secret
+            ]
+        except FileNotFoundError:
+            return None
         if len(candidates) > 1:
             raise NotImplementedError(
                 "Do not handle the fact that several password have the same name yet"
