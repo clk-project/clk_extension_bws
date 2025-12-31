@@ -1,0 +1,24 @@
+* deps 
+  :PROPERTIES:
+  :CREATED:  [2025-12-31 15:44]
+  :END:
+  - clk pip install build twine
+
+* build
+  :PROPERTIES:
+  :CREATED:  [2025-12-31 15:44]
+  :END:
+  - make a tag
+  - clk python -m build --wheel
+ 
+
+* upload
+  :PROPERTIES:
+  :CREATED:  [2025-12-31 15:44]
+  :END:
+  create a token in https://pypi.org/manage/account/token/
+
+  twine upload dist/clk_extension_bws-*
+  rm -rf dist
+
+  remove the token
