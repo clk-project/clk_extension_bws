@@ -71,11 +71,14 @@ class BWSProject(DynamicChoice):
 
     @staticmethod
     def to_name(project_id):
-        return [
-            project["name"]
-            for project in BWSProject.bws_project_list()
-            if project["id"] == project_id
-        ][0]
+        try:
+            return [
+                project["name"]
+                for project in BWSProject.bws_project_list()
+                if project["id"] == project_id
+            ][0]
+        except IndexError:
+            return f"project-{project_id}-unauthorized"
 
     def choices(self):
         return [project["name"] for project in self.bws_project_list()]
