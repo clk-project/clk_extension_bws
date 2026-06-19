@@ -170,10 +170,7 @@ class BWSSecretName(DynamicChoice):
 @flag("--value", help="Only the value, to ease automation")
 def show(secret, value):
     "Nicely show this secret"
-    projects = BWSProject.bws_project_list()
-    projectName = [
-        project["name"] for project in projects if project["id"] == secret["projectId"]
-    ][0]
+    projectName = BWSProject.to_name(secret["projectId"])
 
     content = {"projectName": projectName} | secret
     if value:
@@ -184,11 +181,7 @@ def show(secret, value):
 
 def extend_with_project(secret):
     if projectId := secret.get("projectId"):
-        projectName = [
-            project["name"]
-            for project in BWSProject.bws_project_list()
-            if project["id"] == projectId
-        ][0]
+        projectName = BWSProject.to_name(projectId)
     return secret | {"project": projectName}
 
 
